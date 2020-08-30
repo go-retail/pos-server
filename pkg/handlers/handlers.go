@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-retail/pos-server/pkg/rabbit"
+	"github.com/go-retail/pos-server/pkg/utils"
 	"github.com/gorilla/mux"
 	"github.com/streadway/amqp"
 )
@@ -31,11 +33,13 @@ func generateTransaction() *Transaction {
 	return &txn
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
+//Home ..
+func Home(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hello from From the Root"))
 }
 
-func createTxn(w http.ResponseWriter, r *http.Request) {
+//CreateTxn ..
+func CreateTxn(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
@@ -57,7 +61,7 @@ func createTxn(w http.ResponseWriter, r *http.Request) {
 	jsonString, err := json.Marshal(&txn)
 
 	if err != nil {
-		failOnError(err, "Unable to Marshal Transaction for HTTP Output")
+		utils.FailOnError(err, "Unable to Marshal Transaction for HTTP Output")
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -87,6 +91,6 @@ func recordTransaction(txn *Transaction) {
 		Body:        msgString,
 	}
 
-	rmq.Channel.Publish("", rmq.Queue.Name, false, false, msg)
+	rabbit.Rmq.Channel.Publish("", rabbit.Rmq.Queue.Name, false, false, msg)
 
 }

@@ -1,7 +1,9 @@
-package main
+package routes
 
 import (
 	"net/http"
+
+	"github.com/go-retail/pos-server/pkg/handlers"
 )
 
 //Route ..
@@ -12,19 +14,17 @@ type Route struct {
 	HandlerFunc http.HandlerFunc
 }
 
-
-
 var routes = Routes{
 	Route{
 		"Index",
 		"GET",
 		"/",
-		home,
+		handlers.Home,
 	},
 	Route{
 		"Create Transactions",
 		"POST",
 		"/txns/{storeID}/{posID}/create",
-		createTxn,
+		handlers.CreateTxn,
 	},
 }
