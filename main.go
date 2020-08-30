@@ -20,14 +20,10 @@ type Transaction struct {
 
 func main() {
 	getConfig()
-	// go client()
-	// go server()
-
-	// var s string
-	// fmt.Scanln(&s)
 	startMux()
 }
 
+//This is only for Simulation.  Will not be needed when the Transaction arrives from  POS Machine
 func generateTransaction() *Transaction {
 	txn :=
 		Transaction{
@@ -46,12 +42,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func startMux() {
 
-	// mux := http.NewServeMux()
-	// mux.HandleFunc("/", home)
-	// log.Println("Starting server on :4000")
-	// err := http.ListenAndServe(":4000", mux)
-	// log.Fatal(err)
-
 	http.HandleFunc("/", home)
 	// http.HandleFunc("/snippet", showSnippet)
 	http.HandleFunc("/txns/create", createTxn)
@@ -62,38 +52,44 @@ func startMux() {
 }
 
 func createTxn(w http.ResponseWriter, r *http.Request) {
-	// Use r.Method to check whether the request is using POST or not. Note that // http.MethodPost is a constant equal to the string "POST".
+
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
-		// Use the http.Error() function to send a 405 status code and "Method Not // Allowed" string as the response body.
 		http.Error(w, "Method Not Allowed", 405)
 		return
 	}
 
-	//Async Log Transaction Records
+	//Generate new Transaction
+	//TODO will be removed when real transactions arrive
 	txn := generateTransaction()
+
+	//Async Log Transaction Records
 	recordTransaction(txn)
-	w.Header().Set("Content-Type", "application/json")
+
 	jsonString, err := json.Marshal(&txn)
-	w.Write(jsonString)
-	failOnError(err, "Unable to Marshal Transaction for HTTP Output")
-	// w.Write([]byte(`{"name":"Alex"}`))
-	// w.Write([]byte("New Transaction Recorded"))
-}
 
-func client() {
-	conn, channel, queue := getQueue()
-
-	defer conn.Close()
-	defer channel.Close()
-
-	msgs, err := channel.Consume(queue.Name, "", true, false, false, false, nil)
-	failOnError(err, "Failed to register the Channel")
-
-	for msg := range msgs {
-		log.Printf("Received message: %s", msg.Body)
+	if err != nil {
+		failOnError(err, "Unable to Marshal Transaction for HTTP Output")
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonString)
+
 }
+
+// func client() {
+// 	conn, channel, queue := getQueue()
+
+// 	defer conn.Close()
+// 	defer channel.Close()
+
+// 	msgs, err := channel.Consume(queue.Name, "", true, false, false, false, nil)
+// 	failOnError(err, "Failed to register the Channel")
+
+// 	for msg := range msgs {
+// 		log.Printf("Received message: %s", msg.Body)
+// 	}
+// }
 
 func recordTransaction(txn *Transaction) {
 	conn, channel, queue := getQueue()
@@ -113,16 +109,19 @@ func recordTransaction(txn *Transaction) {
 }
 
 func getQueue() (*amqp.Connection, *amqp.Channel, *amqp.Queue) {
+	//TODO externalize RabbitMQ Port to config
 	urlString := fmt.Sprintf("amqp://%s:%s@%s:5672", viper.GetString("username"), viper.GetString("password"), viper.GetString("host"))
-	// fmt.Printf(urlString)
+
 	conn, err := amqp.Dial(urlString)
 	failOnError(err, "Failed to Connect to RabbitMQ")
 
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to Open The Channel")
 
+	//TODO Deliver to Exchange not a Queue
 	q, err := ch.QueueDeclare("hello", false, false, false, false, nil)
 	failOnError(err, "Unable to Declare a Queue")
+
 	return conn, ch, &q
 }
 
