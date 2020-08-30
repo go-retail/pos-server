@@ -1,5 +1,3 @@
-This is a Simple .. Basic ,  Rabbit MEssage send and receive example. 
+Point of Sale Server 
 
-This assumes you are sending to the `default` exchange.  
-
-I tried this by running an instance of RabbitMQ on my local docker-Desktop ( k8s ) via a helm chart. 
+POS Machines will make REST Calls to record transactions.  
