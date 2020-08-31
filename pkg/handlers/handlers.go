@@ -6,24 +6,17 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-retail/pos-server/pkg/model"
 	"github.com/go-retail/pos-server/pkg/rabbit"
 	"github.com/go-retail/pos-server/pkg/utils"
 	"github.com/gorilla/mux"
 	"github.com/streadway/amqp"
 )
 
-//Transaction .. A Struct to hold a Sale Transaction
-type Transaction struct {
-	CustFirstName string    `json:"custFirstName"`
-	CustLastName  string    `json:"custLastName"`
-	Total         float64   `json:"total"`
-	TxnDate       time.Time `json:"txnDate"`
-}
-
 //This is only for Simulation.  Will not be needed when the Transaction arrives from  POS Machine
-func generateTransaction() *Transaction {
+func generateTransaction() *model.Transaction {
 	txn :=
-		Transaction{
+		model.Transaction{
 			CustFirstName: "Anand",
 			CustLastName:  "Rao",
 			Total:         22.34,
@@ -83,7 +76,7 @@ func CreateTxn(w http.ResponseWriter, r *http.Request) {
 // 	}
 // }
 
-func recordTransaction(txn *Transaction) {
+func recordTransaction(txn *model.Transaction) {
 	msgString, _ := json.Marshal(*txn)
 
 	msg := amqp.Publishing{
