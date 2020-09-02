@@ -4,15 +4,14 @@ import (
 	"log"
 	"net/http"
 
-	rabbit "github.com/go-retail/common-utils/pkg/rabbit"
-	config "github.com/go-retail/pos-server/pkg/config"
+	"github.com/go-retail/common-utils/pkg/configutils"
+	"github.com/go-retail/common-utils/pkg/rabbit"
 	routes "github.com/go-retail/pos-server/pkg/routes"
 )
 
 func main() {
-	config.GetConfig()
+	configutils.GetConfig()
 	rabbit.InitRMQ()
-
 	defer rabbit.Rmq.Connection.Close()
 	defer rabbit.Rmq.Channel.Close()
 

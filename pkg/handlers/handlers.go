@@ -2,11 +2,13 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
+	"github.com/go-retail/common-utils/pkg/logutils"
 	"github.com/go-retail/common-utils/pkg/rabbit"
-	model "github.com/go-retail/retail-model/pkg/model"
+	"github.com/go-retail/retail-model/pkg/model"
 	"github.com/gorilla/mux"
 	"github.com/streadway/amqp"
 )
@@ -41,7 +43,7 @@ func CreateTxn(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	storeID := params["storeID"]
 	posID := params["posID"]
-	retailLogs.Printf("Received Request from Store: %s -   POS ID: %s", storeID, posID)
+	log.Printf("Received Request from Store: %s -   POS ID: %s", storeID, posID)
 	//Generate new Transaction
 	//TODO will be removed when real transactions arrive
 	txn := generateTransaction()
