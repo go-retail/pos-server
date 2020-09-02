@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+//GetConfig ..
 func GetConfig() {
 	viper.SetConfigName("config")
 	viper.AddConfigPath("conf")

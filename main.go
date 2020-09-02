@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/go-retail/pos-server/pkg/config"
-	"github.com/go-retail/pos-server/pkg/rabbit"
 	"github.com/go-retail/pos-server/pkg/routes"
+	"github.com/go-retail/rabbitmq-utils/pkg/rabbit"
 )
 
 func main() {

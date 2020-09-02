@@ -1,5 +1,5 @@
 {
-    "username"  : "SOME USER" ,
-    "password"  : "SOMEPASS" ,
-    "host"      : "localhost"
+    "RabbitmqUsername"  : "Some USEr" ,
+    "RabbitmqPassword"  : "Some PAss" ,
+    "RabbitmqHost"      : "localhost"
 }
