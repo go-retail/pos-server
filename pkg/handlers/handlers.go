@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-retail/pos-server/pkg/model"
 	"github.com/go-retail/pos-server/pkg/rabbit"
 	"github.com/go-retail/pos-server/pkg/utils"
+	model "github.com/go-retail/retail-model/pkg/model"
 	"github.com/gorilla/mux"
 	"github.com/streadway/amqp"
 )
