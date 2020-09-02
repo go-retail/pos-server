@@ -2,12 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 
-	"github.com/go-retail/pos-server/pkg/utils"
-	"github.com/go-retail/rabbitmq-utils/pkg/rabbit"
+	"github.com/go-retail/common-utils/pkg/rabbit"
 	model "github.com/go-retail/retail-model/pkg/model"
 	"github.com/gorilla/mux"
 	"github.com/streadway/amqp"
@@ -43,7 +41,7 @@ func CreateTxn(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	storeID := params["storeID"]
 	posID := params["posID"]
-	log.Printf("Received Request from Store: %s -   POS ID: %s", storeID, posID)
+	retailLogs.Printf("Received Request from Store: %s -   POS ID: %s", storeID, posID)
 	//Generate new Transaction
 	//TODO will be removed when real transactions arrive
 	txn := generateTransaction()
@@ -54,7 +52,7 @@ func CreateTxn(w http.ResponseWriter, r *http.Request) {
 	jsonString, err := json.Marshal(&txn)
 
 	if err != nil {
-		utils.FailOnError(err, "Unable to Marshal Transaction for HTTP Output")
+		logutils.FailOnError(err, "Unable to Marshal Transaction for HTTP Output")
 	}
 
 	w.Header().Set("Content-Type", "application/json")

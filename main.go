@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-retail/pos-server/pkg/config"
-	"github.com/go-retail/pos-server/pkg/routes"
-	"github.com/go-retail/rabbitmq-utils/pkg/rabbit"
+	rabbit "github.com/go-retail/common-utils/pkg/rabbit"
+	config "github.com/go-retail/pos-server/pkg/config"
+	routes "github.com/go-retail/pos-server/pkg/routes"
 )
 
 func main() {
